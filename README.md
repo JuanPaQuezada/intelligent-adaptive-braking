@@ -1,2 +1,48 @@
-# intelligent-adaptive-braking
-A firmware for managing regenerative and mechanical braking by recognizing driving patterns through vehicle telemetry, eliminating the need for expensive ADAS sensors
+# Intelligent Adaptive Braking System Based on Telemetry and Driving Cycle Inference
+
+This project defines the design of a braking system that adapts its behavior to the actual driving context using telemetry already available inside the vehicle, without relying on costly external sensors. The objective is not limited to improving a single braking function. The broader goal is to establish a technically rigorous foundation for a smarter, more efficient, and more commercially viable control strategy for entry-level electric and hybrid vehicles.
+
+## The Problem
+
+Predictive regenerative braking, in its most advanced form, remains largely reserved for premium vehicle platforms. In practice, its performance often depends on expensive architectures that combine vision, radar, continuous localization, and assistance suites designed to anticipate the driving environment with a high degree of complexity and a significant implementation cost.
+
+That approach leaves out a much larger market segment: entry-level electric and hybrid vehicles that, despite their growing global adoption, continue to operate with essentially static braking strategies. The result is reduced efficiency in urban driving, less effective management of recoverable energy, and greater wear on mechanical and electrical components when the strategy does not adapt to the vehicle's real operating conditions.
+
+## The Proposal
+
+The proposal is to democratize adaptive braking through inference based on internal telemetry, eliminating dependence on expensive external hardware. Instead of attempting to perceive the environment through additional sensors, the system seeks to recognize driving patterns from the vehicle's dynamic behavior and from operational variables already available on the platform.
+
+The technical value of this approach lies in its cost-benefit profile. By avoiding specialized sensors and oversized computational requirements, the system can be designed as a lighter, more scalable solution that is closer to the industrial reality of high-volume vehicles. The aim is to capture much of the value of a premium predictive strategy without transferring its full complexity into the vehicle.
+
+## Project Objective
+
+The objective is to develop software capable of inferring, in real time, the dominant driving cycle of the vehicle and using that inference to dynamically adjust the balance between regenerative braking and mechanical braking.
+
+The system logic begins with telemetry observed over bounded time windows. From those signals, the software must distinguish driving contexts that have direct implications for braking strategy, such as urban stop-and-go conditions, sustained cruise on open roads, or prolonged descents where energy recovery plays a different role. That inference must operate within the physical constraints of the storage system, especially battery state of charge and temperature, to avoid decisions that compromise safety, efficiency, or driving comfort.
+
+## Development Approach
+
+The project is organized into three complementary phases, each with a defined role in the technical chain. This structure is intended to separate data understanding, decision-making, and architectural validation in a way that allows the system to evolve with order and traceability.
+
+The first phase focuses on telemetry analysis. At this stage, real driving patterns will be examined to identify the statistical structure of the relevant signals and to establish the criteria needed to recognize the driving cycle from finite observation windows. This phase forms the foundation of the entire project because it defines which information has operational value and how it should be interpreted.
+
+The second phase corresponds to the inference and control engine. Here, the system's central logic will be consolidated so that observed information can be transformed into braking decisions. The expected behavior is smooth, coherent, and non-intrusive for the driver, avoiding abrupt or binary responses that could degrade the driving experience. The target is a controller that adjusts braking strategy with technical judgment and operational continuity.
+
+The third phase covers system architecture and simulation. This stage is dedicated to structuring the control software in a stable, verifiable, and extensible way, while preserving the interaction between inputs, decisions, and outputs. It will also serve to represent integration as a functional component within a broader vehicle environment, allowing consistency, robustness, and deployment viability to be evaluated.
+
+## Expected Impact
+
+From an energy perspective, the system is expected to increase energy recovery potential in routes where regenerative braking can be applied more intelligently, especially in urban contexts. That translates into better battery utilization and a more rational management of energy flow during driving.
+
+From a mechanical perspective, the strategy aims to reduce unnecessary wear on friction elements by prioritizing electromagnetic retention more frequently when vehicle conditions allow it. This balance not only improves efficiency but also extends the service life of components directly exposed to wear.
+
+From an industrial perspective, the project proposes a scalable software alternative for manufacturers and fleet operators seeking efficiency gains without redesigning the physical platform. This is especially relevant for existing mobility solutions, where a logical improvement in system behavior can deliver tangible value without requiring deep structural modifications.
+
+## Repository Scope
+
+This repository is intended to serve as the technical and documentary foundation of the project. Its purpose is to consolidate the system vision, organize its evolution, and establish the path for implementation, testing, and refinement.
+The priority is to define the problem correctly, establish the functional boundaries of the system, and maintain a conceptual architecture that is clear enough to support the decisions that will follow.
+
+## Value Perspective
+
+The relevance of this work lies not only in automating a braking decision, but also in bringing operational intelligence to a domain where rigidity has historically dominated. If the system can infer the driving context accurately and respond with stability, it can become a practical path toward better efficiency, durability, and technological accessibility in the next generation of electrified vehicles.
