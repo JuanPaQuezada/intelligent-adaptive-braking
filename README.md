@@ -14,6 +14,15 @@ The proposal is to democratize adaptive braking through inference based on inter
 
 The technical value of this approach lies in its cost-benefit profile. By avoiding specialized sensors and oversized computational requirements, the system can be designed as a lighter, more scalable solution that is closer to the industrial reality of high-volume vehicles. The aim is to capture much of the value of a premium predictive strategy without transferring its full complexity into the vehicle.
 
+```mermaid
+flowchart LR
+	A[Vehicle Telemetry Inputs] --> B[Time Window]
+	B --> C[Inference Engine]
+	C --> D{Braking Strategy}
+	D --> E[Regenerative Brake]
+	D --> F[Mechanical Brake]
+```
+
 ## Project Objective
 
 The objective is to develop software capable of inferring, in real time, the dominant driving cycle of the vehicle and using that inference to dynamically adjust the balance between regenerative braking and mechanical braking.
