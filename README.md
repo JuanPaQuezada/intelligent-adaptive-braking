@@ -16,10 +16,10 @@ The technical value of this approach lies in its cost-benefit profile. By combin
 
 ```mermaid
 flowchart LR
-	A[Vehicle Telemetry Inputs] --> B[State Estimation]
-	B --> C[Driving Context Inference]
-	C --> D[Predictive Control Layer]
-	D --> E{Brake Allocation}
+	A[Vehicle Telemetry Inputs] --> B[Time Window]
+	B --> C[Predictive Control Layer]
+	C --> D[Random Forest Context Classifier]
+	D --> E{Braking Strategy}
 	E --> F[Regenerative Brake]
 	E --> G[Mechanical Brake]
 ```
