@@ -12,32 +12,35 @@ That approach leaves out a much larger market segment: entry-level electric and 
 
 The proposal is to democratize adaptive braking through inference based on internal telemetry, eliminating dependence on expensive external hardware. Instead of attempting to perceive the environment through additional sensors, the system seeks to recognize driving patterns from the vehicle's dynamic behavior and from operational variables already available on the platform.
 
-The technical value of this approach lies in its cost-benefit profile. By avoiding specialized sensors and oversized computational requirements, the system can be designed as a lighter, more scalable solution that is closer to the industrial reality of high-volume vehicles. The aim is to capture much of the value of a premium predictive strategy without transferring its full complexity into the vehicle.
+The technical value of this approach lies in its cost-benefit profile. By combining state estimation, context recognition, and braking allocation inside a compact control chain, the system can be designed as a lighter, more scalable solution that remains aligned with the industrial reality of high-volume vehicles. The aim is to capture much of the value of a premium predictive strategy without transferring its full complexity into the vehicle.
 
 ```mermaid
 flowchart LR
-	A[Vehicle Telemetry Inputs] --> B[Time Window]
-	B --> C[Inference Engine]
-	C --> D{Braking Strategy}
-	D --> E[Regenerative Brake]
-	D --> F[Mechanical Brake]
+	A[Vehicle Telemetry Inputs] --> B[State Estimation]
+	B --> C[Driving Context Inference]
+	C --> D[Predictive Control Layer]
+	D --> E{Brake Allocation}
+	E --> F[Regenerative Brake]
+	E --> G[Mechanical Brake]
 ```
 
 ## Project Objective
 
 The objective is to develop software capable of inferring, in real time, the dominant driving cycle of the vehicle and using that inference to dynamically adjust the balance between regenerative braking and mechanical braking.
 
-The system logic begins with telemetry observed over bounded time windows. From those signals, the software must distinguish driving contexts that have direct implications for braking strategy, such as urban stop-and-go conditions, sustained cruise on open roads, or prolonged descents where energy recovery plays a different role. That inference must operate within the physical constraints of the storage system, especially battery state of charge and temperature, to avoid decisions that compromise safety, efficiency, or driving comfort.
+The system logic begins with telemetry observed over bounded time windows. From those signals, the software must distinguish driving contexts that have direct implications for braking strategy, such as urban stop-and-go conditions, sustained cruise on open roads, emergency deceleration, or prolonged descents where energy recovery plays a different role. That inference must operate within the physical constraints of the storage system, especially battery state of charge and temperature, to avoid decisions that compromise safety, efficiency, or driving comfort.
 
 ## Development Approach
 
 The project is organized into three complementary phases, each with a defined role in the technical chain. This structure is intended to separate data understanding, decision-making, and architectural validation in a way that allows the system to evolve with order and traceability.
 
-The first phase focuses on telemetry analysis. At this stage, real driving patterns will be examined to identify the statistical structure of the relevant signals and to establish the criteria needed to recognize the driving cycle from finite observation windows. This phase forms the foundation of the entire project because it defines which information has operational value and how it should be interpreted.
+The first phase focuses on telemetry analysis and dynamic state estimation. At this stage, real driving patterns will be examined to identify the statistical structure of the relevant signals, while the physical behavior of the braking system is modeled to recover dynamic variables that are not measured directly. This phase forms the foundation of the entire project because it defines which information has operational value and how it should be interpreted.
 
-The second phase corresponds to the inference and control engine. Here, the system's central logic will be consolidated so that observed information can be transformed into braking decisions. The expected behavior is smooth, coherent, and non-intrusive for the driver, avoiding abrupt or binary responses that could degrade the driving experience. The target is a controller that adjusts braking strategy with technical judgment and operational continuity.
+The second phase corresponds to the inference and control engine. Here, the system's central logic will be consolidated so that observed information can be transformed into braking decisions. A dedicated context classifier will identify the surrounding driving situation from temporal variations in the estimated dynamics, and the resulting context will guide the control policy. The expected behavior is smooth, coherent, and non-intrusive for the driver, avoiding abrupt or binary responses that could degrade the driving experience. The target is a controller that adjusts braking strategy with technical judgment and operational continuity.
 
 The third phase covers system architecture and simulation. This stage is dedicated to structuring the control software in a stable, verifiable, and extensible way, while preserving the interaction between inputs, decisions, and outputs. It will also serve to represent integration as a functional component within a broader vehicle environment, allowing consistency, robustness, and deployment viability to be evaluated.
+
+Within this stage, the estimator, the classifier, and the control layer are expected to operate as a single chain with low latency and deterministic behavior, so the system can react in real time without disrupting the driver's perception of braking smoothness.
 
 ## Expected Impact
 
