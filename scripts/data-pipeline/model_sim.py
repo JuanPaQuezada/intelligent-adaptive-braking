@@ -55,5 +55,5 @@ if __name__ == "__main__":
     directorio_script = os.path.dirname(os.path.abspath(__file__))
     raiz_proyecto = os.path.dirname(os.path.dirname(directorio_script))
     ruta_entrada = os.path.join(raiz_proyecto, "data/raw/telemetria_openpilot.csv")
-    ruta_salida = os.path.join(raiz_proyecto, "data/raw/telemetria_openpilot.csv")
+    ruta_salida = os.path.join(raiz_proyecto, "data/raw/telemetria_openpilot_fisica.csv")
     aplicar_modelo_fisico(ruta_entrada, ruta_salida)
