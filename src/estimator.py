@@ -31,6 +31,12 @@ for z in df['velocidad_ms']:
 
 df['velocidad_filtrada_ms']=velocidades_limpias
 
+columnas_finales=['timestamp_ns','velocidad_filtrada_ms','aceleracion_long_m_s2','freno_activo']
+df_limpio=df[columnas_finales].copy()
+df_limpio=df_limpio.rename(columns={'velocidad_filtrada_ms':'velocidad_ms'})
+df_limpio.to_csv('data/processed/telemetria_filtrada_lista_para_ml.csv',index=False)
+print("Archivo de telemetría filtrada guardado en 'data/processed/telemetria_filtrada_lista_para_ml.csv'")
+
 plt.figure(figsize=(12,6))
 plt.plot(df['velocidad_ms'],label='Señal Cruda (Sensor / Carving)',color='red',alpha=0.5,linestyle='--')
 plt.plot(df['velocidad_filtrada_ms'],label='Señal Filtrada (Kalman)',color='blue',linewidth=2)
