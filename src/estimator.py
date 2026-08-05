@@ -34,6 +34,13 @@ df['velocidad_filtrada_ms']=velocidades_limpias
 columnas_finales=['timestamp_ns','velocidad_filtrada_ms','aceleracion_long_m_s2','freno_activo']
 df_limpio=df[columnas_finales].copy()
 df_limpio=df_limpio.rename(columns={'velocidad_filtrada_ms':'velocidad_ms'})
+window_size=50
+#moving average speed
+df_limpio['velocidad_promedio_5s']=df_limpio['velocidad_ms'].rolling(window=window_size).mean()
+#moving average acceleration
+df_limpio['aceleracion_promedio_5s']=df_limpio['aceleracion_long_m_s2'].rolling(window=window_size).mean()
+#clean the dataframe by dropping rows with NaN values
+df_limpio=df_limpio.dropna()
 df_limpio.to_csv('data/processed/telemetria_filtrada_lista_para_ml.csv',index=False)
 print("Archivo de telemetría filtrada guardado en 'data/processed/telemetria_filtrada_lista_para_ml.csv'")
 
