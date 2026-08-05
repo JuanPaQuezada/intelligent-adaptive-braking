@@ -24,6 +24,16 @@ flowchart LR
 	E --> G[Mechanical Brake]
 ```
 
+## Data Acquisition Pipeline
+
+The dataset used in this project was not treated as a static download artifact. Instead, it was assembled through a controlled extraction pipeline built in two Python scripts, designed to preserve the fidelity of the original vehicle telemetry while selecting only the platforms relevant to the study.
+
+The first script interacts with the Hugging Face hub to retrieve the `database.json` manifest from the `commaai/commaCarSegments` dataset. From that manifest, it filters the records and dynamically assembles the download paths for the `rlog.zst` files associated only with the vehicle platforms of interest, such as `CHEVROLET_BOLT` and `HYUNDAI_IONIQ_5`. This step ensures that the dataset remains focused on the operating conditions and vehicle classes that matter to the project, instead of mixing in unrelated segments that would add noise without improving the analysis.
+
+The second script processes each compressed log by decompressing the `rlog.zst` files with `zstandard` and scanning the resulting binary stream directly. Rather than relying on a preprocessed intermediate layer, the script reads the raw memory segments and uses Python's native `struct` module to interpret the 64-bit structures used by the log format, which are organized through Cap'n Proto. From that low-level representation, the pipeline extracts the raw inertial telemetry required by the project, including `vEgo`, `aEgo`, and the brake pedal state.
+
+This decision was intentional. By extracting telemetry at the byte level directly from real vehicle data, the downstream estimation filter and the context classifier are exposed to the authentic sensor noise, timing variability, and physical dynamics present in the source logs. That makes the resulting dataset more faithful to the operating environment than heavily preprocessed alternatives, and it gives the state estimator and classifier a better foundation for learning behavior that must remain valid in real driving conditions.
+
 ## Project Objective
 
 The objective is to develop software capable of inferring, in real time, the dominant driving cycle of the vehicle and using that inference to dynamically adjust the balance between regenerative braking and mechanical braking.
