@@ -46,6 +46,9 @@ The third milestone was the definition of a lightweight dataset schema optimized
 
 The fourth milestone was a training protocol note linked to Issue 3. The `timestamp_ns` field is used exclusively as a temporal mold for ordering and feature derivation during feature engineering, but it must be strictly dropped before training the Random Forest and ONNX model. This prevents time-index leakage, reduces overfitting risk, and ensures the model learns braking kinematics rather than memorizing a timeline.
 
+<img width="1200" height="600" alt="Figure_1" src="https://github.com/user-attachments/assets/af1326d2-cc5d-4b8b-9de5-b0524cb1e235" />
+
+
 ## Project Objective
 
 The objective is to develop software capable of inferring, in real time, the dominant driving cycle of the vehicle and using that inference to dynamically adjust the balance between regenerative braking and mechanical braking.
