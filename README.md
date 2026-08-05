@@ -34,6 +34,18 @@ The second script processes each compressed log by decompressing the `rlog.zst` 
 
 This decision was intentional. By extracting telemetry at the byte level directly from real vehicle data, the downstream estimation filter and the context classifier are exposed to the authentic sensor noise, timing variability, and physical dynamics present in the source logs. That makes the resulting dataset more faithful to the operating environment than heavily preprocessed alternatives, and it gives the state estimator and classifier a better foundation for learning behavior that must remain valid in real driving conditions.
 
+## Completed Milestones
+
+The latest implementation cycle delivered four milestones that directly strengthened the reliability of the end-to-end pipeline.
+
+The first milestone was signal purification. The initial telemetry extraction from the CAN data stream showed extreme noise and memory corruption artifacts that distorted the physical interpretation of braking events. We addressed this by implementing a 1D Kalman Filter in Python, which stabilized the velocity curve and restored physically coherent vehicle dynamics without requiring complex dependency compilation.
+
+The second milestone was the data architecture baseline for MLOps. We established a strict separation policy where noisy source data remains immutable in `data/raw/`, while the purified dataset is exported to `data/processed/telemetria_lista_para_ml.csv` as the only modeling-ready artifact.
+
+The third milestone was the definition of a lightweight dataset schema optimized for low-latency inference. The final dataset is intentionally compact and contains four kinematic variables: `timestamp_ns`, `velocidad_ms`, `aceleracion_long_m_s2`, and `freno_activo`.
+
+The fourth milestone was a training protocol note linked to Issue 3. The `timestamp_ns` field is used exclusively as a temporal mold for ordering and feature derivation during feature engineering, but it must be strictly dropped before training the Random Forest and ONNX model. This prevents time-index leakage, reduces overfitting risk, and ensures the model learns braking kinematics rather than memorizing a timeline.
+
 ## Project Objective
 
 The objective is to develop software capable of inferring, in real time, the dominant driving cycle of the vehicle and using that inference to dynamically adjust the balance between regenerative braking and mechanical braking.
