@@ -53,20 +53,26 @@ try:
     df['energia_cinetica_rel'] = df['velocidad_ms'] ** 2
     df['potencia_teorica'] = df['velocidad_ms'] * df['aceleracion_long_m_s2']
 
-    col_izq, col_centro, col_der = st.columns([1, 2, 1])
+    
+    col_izq, col_centro, col_der = st.columns([1, 1.2, 1])
     
     with col_izq:
         metrica_vel = st.empty()
         metrica_energia = st.empty()
         
     with col_centro:
-        st.image("v_app/byd.png", use_container_width=True) 
-        st.markdown("<br>", unsafe_allow_html=True)
-        grafica_dinamica = st.empty()
         
+        _, col_img, _ = st.columns([1, 3, 1])
+        with col_img:
+            st.image("v_app/byd.png", use_container_width=True) 
+            
     with col_der:
         metrica_potencia = st.empty()
         metrica_freno = st.empty()
+
+    
+    st.markdown("<br>", unsafe_allow_html=True)
+    grafica_dinamica = st.empty()
 
     if not st.session_state.simulando:
         fila_actual = df.iloc[st.session_state.indice_actual]
