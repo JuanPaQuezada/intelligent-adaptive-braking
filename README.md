@@ -48,6 +48,18 @@ The fourth milestone was a training protocol note linked to Issue 3. The `timest
 
 <img width="1200" height="600" alt="Figure_1" src="https://github.com/user-attachments/assets/af1326d2-cc5d-4b8b-9de5-b0524cb1e235" />
 
+## Mathematical and Logical Refinements
+
+The most recent version of the pipeline also resolved a fundamental sensor fusion mismatch between vehicle speed, sourced from OBD2, and inertial acceleration, sourced from the IMU. This was addressed by computing a dynamic `dt` directly from nanosecond timestamps and deriving the real acceleration from the cleaned temporal evolution of the signal. The result is a kinematic representation that remains internally consistent and respects the physical relationship between position, velocity, and acceleration.
+
+When the original dataset did not contain enough examples of high-speed driving or emergency maneuvers, the urban base dataset was used as a physical template to synthesize two additional operating scenarios: `Highway` and `Panic Braking`. This augmentation was carried out under Newtonian constraints so the generated samples preserve the same mechanical coherence as the source telemetry rather than introducing artificial statistical shortcuts.
+
+To avoid amplifying noise or creating random walk artifacts, acceleration was derived strictly from clean velocity curves through cumulative construction using `pd.Series(np.cumsum)`, and sensor noise was injected only at the end of the channel. This sequencing preserves the integrity of the derivatives and prevents the augmentation process from corrupting the underlying motion dynamics.
+
+The synthetic acceleration was also constrained through clipping to the real traction limits of the tires, including a maximum braking magnitude of `-10.0 m/s²`. This prevented the model from being trained on physically impossible values and kept the generated behavior within the envelope expected in actual vehicle operation.
+
+The outcome of this pipeline is twofold. On one side, it produces the balanced dataset used to train the Machine Learning model, stored as `data/processed/telemetria_filtrada_lista_para_ml_aumentado.csv`. On the other side, it provides the basis for the graphical interface mockup, exported as `data/telemetria_mock_para_interfaz.csv`, which includes the brake blending distribution between regenerative and mechanical braking.
+
 
 ## Project Objective
 
