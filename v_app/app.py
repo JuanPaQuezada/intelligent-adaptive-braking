@@ -49,7 +49,7 @@ if st.sidebar.button("⏹️ Stop / Reiniciar", use_container_width=True):
 st.title("Panel de Control BYD")
 
 try:
-    df = pd.read_csv("data/processed/telemetria_filtrada_lista_para_ml.csv")
+    df = pd.read_csv("data/telemetria_mock_para_interfaz.csv")
     df['energia_cinetica_rel'] = df['velocidad_ms'] ** 2
     df['potencia_teorica'] = df['velocidad_ms'] * df['aceleracion_long_m_s2']
 
@@ -68,27 +68,38 @@ try:
         metrica_potencia = st.empty()
         metrica_freno = st.empty()
 
-    fila_actual = df.iloc[st.session_state.indice_actual]
-    
-    metrica_vel.metric("Velocidad", f"{fila_actual['velocidad_ms']:.2f} m/s")
-    metrica_energia.metric("Energía Cinética Rel.", f"{fila_actual['energia_cinetica_rel']:.2f}")
-    metrica_potencia.metric("Potencia Teórica", f"{fila_actual['potencia_teorica']:.2f} kW")
-    
-    estado = "🔴 ACTIVO" if fila_actual['freno_activo'] == 1 else "🟢 INACTIVO"
-    metrica_freno.metric("Freno", estado)
-    
-    datos_recientes = df.iloc[max(0, st.session_state.indice_actual-50):st.session_state.indice_actual+1]
-    grafica_dinamica.line_chart(datos_recientes[['velocidad_ms', 'aceleracion_long_m_s2']])
-
-    # 6.2 Lógica de avance
-    if st.session_state.simulando:
-        if st.session_state.indice_actual < len(df) - 1:
-            st.session_state.indice_actual += 1  
-            time.sleep(1.0)                      
-            st.rerun()                           
-        else:
-            st.session_state.simulando = False
-            st.success("¡Simulación finalizada! Llegamos al final de los datos.")
+    if not st.session_state.simulando:
+        fila_actual = df.iloc[st.session_state.indice_actual]
+        
+        metrica_vel.metric("Velocidad", f"{fila_actual['velocidad_ms']:.2f} m/s")
+        metrica_energia.metric("Energía Cinética Rel.", f"{fila_actual['energia_cinetica_rel']:.2f}")
+        metrica_potencia.metric("Potencia Teórica", f"{fila_actual['potencia_teorica']:.2f} kW")
+        
+        estado = "🔴 ACTIVO" if fila_actual['freno_activo'] == 1 else "🟢 INACTIVO"
+        metrica_freno.metric("Freno", estado)
+        
+        datos_recientes = df.iloc[max(0, st.session_state.indice_actual-50):st.session_state.indice_actual+1]
+        grafica_dinamica.line_chart(datos_recientes[['velocidad_ms', 'aceleracion_long_m_s2']])
+        
+    else:
+        for i in range(st.session_state.indice_actual, len(df)):
+            st.session_state.indice_actual = i
+            fila_actual = df.iloc[i]
+            
+            metrica_vel.metric("Velocidad", f"{fila_actual['velocidad_ms']:.2f} m/s")
+            metrica_energia.metric("Energía Cinética Rel.", f"{fila_actual['energia_cinetica_rel']:.2f}")
+            metrica_potencia.metric("Potencia Teórica", f"{fila_actual['potencia_teorica']:.2f} kW")
+            
+            estado = "🔴 ACTIVO" if fila_actual['freno_activo'] == 1 else "🟢 INACTIVO"
+            metrica_freno.metric("Freno", estado)
+            
+            datos_recientes = df.iloc[max(0, i-50):i+1]
+            grafica_dinamica.line_chart(datos_recientes[['velocidad_ms', 'aceleracion_long_m_s2']])
+            
+            time.sleep(1.0)
+            
+        st.session_state.simulando = False
+        st.success("¡Simulación finalizada! Llegamos al final de los datos.")
 
 except FileNotFoundError:
-    st.error("Error: No se encontró el archivo CSV en 'data/processed/telemetria_filtrada_lista_para_ml.csv'.")
+    st.error("Error: No se encontró el archivo CSV en 'data/telemetria_mock_para_interfaz.csv'.")
