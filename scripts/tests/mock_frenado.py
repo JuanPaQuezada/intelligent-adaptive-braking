@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import sys
 try:
-    df=pd.read_csv('data/processed/telemetria_filtrada_lista_para_ml.csv')
+    df=pd.read_csv('data/processed/telemetria_filtrada_lista_para_ml_aumentado.csv')
     print("Archivo de telemetría filtrada cargado correctamente desde 'data/processed/telemetria_filtrada_lista_para_ml.csv'")
 except FileNotFoundError:
     print("Archivo de telemetría filtrada no encontrado. Por favor, asegúrese de que el archivo exista en 'data/processed/telemetria_filtrada_lista_para_ml.csv'")
